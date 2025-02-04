@@ -8,5 +8,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
+    "express": "^4.21.2",
+    "tsc": "^2.0.4"
+  }
 }
