@@ -1,40 +1,43 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var cluster_1 = require("cluster");
-var os_1 = require("os");
-var cpuCount = os_1.default.cpus().length;
-var port = 3000;
+const express_1 = __importDefault(require("express"));
+const cluster_1 = __importDefault(require("cluster"));
+const os = require('os');
+const cpuCount = os.cpus().length;
+const port = 3000;
 if (cluster_1.default.isPrimary) {
-    console.log("Number of CPUs is ".concat(cpuCount));
-    console.log("Primary ".concat(process.pid, " is running"));
+    console.log(`Number of CPUs is ${cpuCount}`);
+    console.log(`Primary ${process.pid} is running`);
     // Fork worker
-    for (var i = 0; i < cpuCount; i++) {
+    for (let i = 0; i < cpuCount; i++) {
         cluster_1.default.fork();
     }
-    cluster_1.default.on('exit', function (worker, code, signal) {
-        console.log("Worker ".concat(worker.process.pid, " died"));
-        console.log('Lets fork another worker to replace the dead one');
+    cluster_1.default.on('exit', (worker, code, signal) => {
+        console.log(`Worker ${worker.process.pid} died`);
+        console.log('Let s fork another worker to replace the dead one');
         cluster_1.default.fork();
     });
 }
 else {
-    var app = (0, express_1.default)();
-    console.log("Worker ".concat(process.pid, " started"));
-    app.get('/', function (req, res) {
+    const app = (0, express_1.default)();
+    console.log(`Worker ${process.pid} started`);
+    app.get('/', (req, res) => {
         res.send('Hello there');
     });
-    app.get('/api/:n', function (req, res) {
-        var n = parseInt(req.params.n);
-        var count = 0;
+    app.get('/api/:n', (req, res) => {
+        let n = parseInt(req.params.n);
+        let count = 0;
         if (n > 5000000000)
             n = 5000000000;
-        for (var i = 0; i < n; i++) {
+        for (let i = 0; i < n; i++) {
             count += i;
         }
-        res.send("Final count is ".concat(count, " ").concat(process.pid));
+        res.send(`Final count is ${count} ${process.pid}`);
     });
-    app.listen(port, function () {
-        console.log("App listening on port ".concat(port));
+    app.listen(port, () => {
+        console.log(`App listening on port ${port}`);
     });
 }

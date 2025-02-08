@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import cluster from 'cluster';
-import os from 'os';
+const os = require('os');
 
 const cpuCount: number = os.cpus().length;
 const port: number = 3000;
@@ -16,7 +16,7 @@ if (cluster.isPrimary) {
 
     cluster.on('exit', (worker, code, signal) => {
         console.log(`Worker ${worker.process.pid} died`);
-        console.log('Lets fork another worker to replace the dead one');
+        console.log('Let s fork another worker to replace the dead one');
         cluster.fork();
     });
 
